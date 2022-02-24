@@ -53,6 +53,7 @@ fn main() {
         location.push("rules.txt");
         let mut writer = File::create(location).unwrap();
         writer.write_all(&mut buf).unwrap();
+        // Intenonally dropped so the file is closed.
         drop(writer);
         let mut meta = current.clone();
         meta.push(&foldername);
