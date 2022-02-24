@@ -1,5 +1,9 @@
+# This is a basic workflow that is manually triggered
+
 name: Rust
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
   workflow_dispatch:
     inputs:
@@ -10,15 +14,15 @@ on:
         default: '2.69'
         # Input has to be provided for the workflow to run
         required: true
-
+        
 env:
   CARGO_TERM_COLOR: always
-
+  
+  
 jobs:
   build:
 
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build
