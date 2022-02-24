@@ -3,18 +3,27 @@ extern crate json;
 extern crate reqwest;
 use reqwest::blocking::*;
 use json::JsonValue::{Array, Object};
+use std::env::*;
 
 const VERSION: f32 = 2.69;
+const FORCEUPDATE: &str = "--force-update";
 
 fn main() {
+    let envargs: Vec<String> = args().collect();
+    let args = &envargs[1..];
+    let check = &args[0];
     let builder = Client::builder().user_agent("KM3DW-Updater").build().unwrap();
+    if check == FORCEUPDATE {
+        println!("Forcing a immediate download of the lattest assets.");
+        update(&builder, get_assets_link(&builder));
+        return;
+    }
     let resp = builder.get("https://raw.githubusercontent.com/Lord-Giganticus/Kaizo-Mario-3D-World-Installer-Remake/main/version.txt");
     let data = resp.send().unwrap().text().unwrap();
     let ver = data.parse::<f32>().unwrap();
-    update(&builder, get_assets_link(&builder));
     if ver < VERSION {
         println!("Downloading latest installer and updater....");
-        
+        update(&builder, get_assets_link(&builder));
     } else {
         println!("No need to update.");
     }
@@ -43,9 +52,17 @@ fn update(builder: &Client, assets_link: String) {
         Array(arr) => arr,
         _ => panic!("Bad Value.")
     };
-    let values = match array.get(0).unwrap() {
-        Object(obj) => obj,
-        _ => panic!("Bad Value.")
-    };
-    println!("{:?}", values);
+    for i in 0..array.len() {
+        let values = match array.get(i).unwrap() {
+            Object(obj) => obj,
+            _ => panic!("Bad Value.")
+        };
+        let name = values.get("name").unwrap().as_str().unwrap().to_owned();
+        let link = values.get("browser_download_url").unwrap().as_str().unwrap().to_owned();
+        if i != 1 {
+            funcs::download(&link, &name, false);
+        } else {
+            funcs::download(&link, &name, true);
+        }
+    }
 }
