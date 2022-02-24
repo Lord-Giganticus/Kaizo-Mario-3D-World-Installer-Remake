@@ -3,8 +3,7 @@ name: Rust
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -33,3 +32,12 @@ jobs:
         cd release
         mv updater.exe ${{ github.workspace }}
         popd
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        #Change this when Surf updates Kaizo finally.
+        automatic_release_tag: "2.69"
+        prerelease: false
+        title: "Auto Build"
+        files: |
+          *.exe
