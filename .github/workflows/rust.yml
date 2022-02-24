@@ -21,12 +21,12 @@ jobs:
         cd downloader
         cargo run --release
         popd
-        pushd %CD%
+        pushd ${{ github.workspace }}
         cd installer
         cargo run --release
         mv "Kaizo Mario 3D World.exe" ${{ github.workspace }}
         popd
-        pushd %CD%
+        pushd ${{ github.workspace }}
         cd updater
         cargo build --release
         cd target
