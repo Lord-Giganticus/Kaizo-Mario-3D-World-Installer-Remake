@@ -1,0 +1,35 @@
+name: Rust
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        pushd ${{ github.workspace }}
+        cd downloader
+        cargo run --release
+        popd
+        pushd %CD%
+        cd installer
+        cargo run --release
+        mv "Kaizo Mario 3D World.exe" ${{ github.workspace }}
+        popd
+        pushd %CD%
+        cd updater
+        cargo build --release
+        cd target
+        cd release
+        mv updater.exe ${{ github.workspace }}
+        popd
