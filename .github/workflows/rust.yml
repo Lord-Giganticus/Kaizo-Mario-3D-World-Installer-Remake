@@ -38,6 +38,6 @@ jobs:
         #Change this when Surf updates Kaizo finally.
         automatic_release_tag: "2.69"
         prerelease: false
-        title: "version 2.69"
+        title: "Version 2.69"
         files: |
           *.exe
