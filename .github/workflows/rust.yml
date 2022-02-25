@@ -22,7 +22,7 @@ jobs:
         popd
         pushd ${{ github.workspace }}
         cd installer
-        cargo run --release
+        cargo run --release ${{ secrets.INSTALLER_ARGS }}
         mv "Kaizo Mario 3D World.exe" ${{ github.workspace }}
         popd
         pushd ${{ github.workspace }}
