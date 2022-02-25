@@ -4,6 +4,8 @@ extern crate reqwest;
 use reqwest::blocking::*;
 use json::JsonValue::{Array, Object};
 use std::env::*;
+use std::path::*;
+use std::*;
 
 const VERSION: f32 = 2.69;
 const FORCEUPDATE: &str = "--force-update";
@@ -19,7 +21,7 @@ fn main() {
     }
     let builder = Client::builder().user_agent("KM3DW-Updater").build().unwrap();
     if check == String::from(FORCEUPDATE) {
-        println!("Forcing a immediate download of the lattest assets.");
+        println!("Forcing a immediate download of the latest assets.");
         update(&builder, get_assets_link(&builder));
         return;
     }
@@ -62,12 +64,18 @@ fn update(builder: &Client, assets_link: String) {
             Object(obj) => obj,
             _ => panic!("Bad Value.")
         };
+        let mut path = current_dir().unwrap();
+        if !Path::new("downloaded").is_dir() {
+            fs::create_dir("downloaded").unwrap();
+        }
         let name = values.get("name").unwrap().as_str().unwrap().to_owned();
+        path.push("downloaded");
+        path.push(&name);
         let link = values.get("browser_download_url").unwrap().as_str().unwrap().to_owned();
         if i != 1 {
-            funcs::download(&link, &name, false);
+            funcs::download(&link, &path.to_str().unwrap().to_owned(), false);
         } else {
-            funcs::download(&link, &name, true);
+            funcs::download(&link, &path.to_str().unwrap().to_owned(), true);
         }
     }
 }
