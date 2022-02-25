@@ -11,9 +11,14 @@ const FORCEUPDATE: &str = "--force-update";
 fn main() {
     let envargs: Vec<String> = args().collect();
     let args = &envargs[1..];
-    let check = &args[0];
+    let check: String;
+    if args.len() != 0 {
+        check = String::from(&args[0]);
+    } else {
+        check = String::new();
+    }
     let builder = Client::builder().user_agent("KM3DW-Updater").build().unwrap();
-    if check == FORCEUPDATE {
+    if check == String::from(FORCEUPDATE) {
         println!("Forcing a immediate download of the lattest assets.");
         update(&builder, get_assets_link(&builder));
         return;
