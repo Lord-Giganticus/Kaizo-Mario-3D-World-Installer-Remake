@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 glob = "0.3.0"
 zip-extract = "0.1.1"
+downloader = { version = "0.1.0", path = "../downloader" }
+
+[build-dependencies]

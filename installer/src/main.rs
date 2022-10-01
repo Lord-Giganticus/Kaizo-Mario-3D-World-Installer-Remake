@@ -1,5 +1,3 @@
-extern crate glob;
-extern crate zip_extract;
 mod rules;
 use rules::Rules;
 use zip_extract::*;
@@ -11,6 +9,11 @@ use std::io::*;
 
 
 fn main() {
+    let km3dw = Path::new("kaizo_mario_3d_world_269.zip");
+    let km3dwp = Path::new("kaizo_mario_3d_world_practice_269.zip");
+    if !km3dw.exists() && !km3dwp.exists() {
+        downloader::downloadkaizo().unwrap();
+    }
     let envargs: Vec<String> = env::args().collect();
     let fakeargs = &envargs[1..];
     let mut args: Vec<String> = Vec::new();
